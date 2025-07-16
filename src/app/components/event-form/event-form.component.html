@@ -1,0 +1,107 @@
+<div class="event-form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Etkinlik Düzenle' : 'Yeni Etkinlik Ekle' }}</h2>
+    <button class="back-btn" (click)="onCancel()">
+      <i class="icon-arrow-left"></i>
+      Geri Dön
+    </button>
+  </div>
+
+  <form [formGroup]="eventForm" (ngSubmit)="onSubmit()" class="event-form">
+    <div class="form-row">
+      <div class="form-group">
+        <label for="title">Etkinlik Başlığı *</label>
+        <input 
+          type="text" 
+          id="title" 
+          formControlName="title"
+          class="form-input"
+          placeholder="Etkinlik başlığını girin">
+        <div class="error-message" *ngIf="title?.invalid && title?.touched">
+          <span *ngIf="title?.errors?.['required']">Başlık zorunludur</span>
+          <span *ngIf="title?.errors?.['minlength']">Başlık en az 3 karakter olmalıdır</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="category">Kategori *</label>
+        <select 
+          id="category" 
+          formControlName="category"
+          class="form-select">
+          <option *ngFor="let category of eventCategories" [value]="category">
+            {{ category }}
+          </option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group">
+        <label for="date">Tarih *</label>
+        <input 
+          type="date" 
+          id="date" 
+          formControlName="date"
+          class="form-input">
+        <div class="error-message" *ngIf="date?.invalid && date?.touched">
+          <span *ngIf="date?.errors?.['required']">Tarih zorunludur</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="time">Saat *</label>
+        <input 
+          type="time" 
+          id="time" 
+          formControlName="time"
+          class="form-input">
+        <div class="error-message" *ngIf="time?.invalid && time?.touched">
+          <span *ngIf="time?.errors?.['required']">Saat zorunludur</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full-width">
+        <label for="location">Konum *</label>
+        <input 
+          type="text" 
+          id="location" 
+          formControlName="location"
+          class="form-input"
+          placeholder="Etkinlik konumunu girin">
+        <div class="error-message" *ngIf="location?.invalid && location?.touched">
+          <span *ngIf="location?.errors?.['required']">Konum zorunludur</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group full-width">
+        <label for="description">Açıklama</label>
+        <textarea 
+          id="description" 
+          formControlName="description"
+          class="form-textarea"
+          rows="4"
+          placeholder="Etkinlik hakkında ek bilgiler..."></textarea>
+      </div>
+    </div>
+
+    <div class="form-actions">
+      <button 
+        type="button" 
+        class="btn btn-secondary" 
+        (click)="onCancel()">
+        İptal
+      </button>
+      <button 
+        type="submit" 
+        class="btn btn-primary"
+        [disabled]="eventForm.invalid">
+        {{ isEditMode ? 'Güncelle' : 'Kaydet' }}
+      </button>
+    </div>
+  </form>
+</div>

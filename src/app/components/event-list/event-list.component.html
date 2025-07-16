@@ -1,0 +1,109 @@
+<div class="event-list-container">
+  <div class="filters-section">
+    <div class="filter-group">
+      <label for="category-filter">Kategori:</label>
+      <select 
+        id="category-filter" 
+        [(ngModel)]="selectedCategory" 
+        (change)="onCategoryChange()"
+        class="filter-select">
+        <option value="all">Tüm Kategoriler</option>
+        <option *ngFor="let category of eventCategories" [value]="category">
+          {{ category }}
+        </option>
+      </select>
+    </div>
+
+    <div class="filter-group">
+      <label for="date-filter">Tarih:</label>
+      <input 
+        type="date" 
+        id="date-filter" 
+        [(ngModel)]="selectedDate" 
+        (change)="onDateChange()"
+        class="filter-input">
+    </div>
+
+    
+
+    <button class="clear-filters-btn" (click)="selectedCategory = 'all'; selectedDate = ''; applyFilters()">
+      Filtreleri Temizle
+    </button>
+  </div>
+
+  <div class="events-section">
+    <div class="section-header">
+      <h2>Etkinlikler ({{ filteredEvents.length }})</h2>
+      <a routerLink="/add" class="add-event-btn">
+        <i class="icon-plus"></i>
+        Yeni Etkinlik
+      </a>
+    </div>
+
+    <div class="events-grid" *ngIf="filteredEvents.length > 0">
+      <div 
+        *ngFor="let event of filteredEvents" 
+        class="event-card"
+        [class.upcoming]="isUpcoming(event)"
+        [class.past]="!isUpcoming(event)">
+        
+        <div class="event-header">
+          <h3 class="event-title">{{ event.title }}</h3>
+          <span class="event-category" [ngClass]="getCategoryClass(event.category)">
+            {{ event.category }}
+          </span>
+        </div>
+
+        <div class="event-details">
+          <div class="event-datetime">
+            <i class="icon-calendar"></i>
+            <span>{{ event.date | date:'dd.MM.yyyy' }}</span>
+            <i class="icon-clock"></i>
+            <span>{{ event.time }}</span>
+          </div>
+
+          <div class="event-location">
+            
+            📍Konum:<i class="icon-location"></i>
+            <span>{{ event.location }}</span>
+          </div>
+
+          <div class="event-description" *ngIf="event.description">
+            <p>{{ event.description }}</p>
+          </div>
+        </div>
+
+        <div class="event-actions">
+          <div style="margin-top: 120px;"><button 
+            class="action-btn edit-btn" 
+            [routerLink]="['/edit', event.id]"
+            title="Düzenle">
+            <i class="icon-edit"></i>
+          </button>
+          <button 
+            class="action-btn delete-btn" 
+            (click)="deleteEvent(event.id)"
+            title="Sil">
+            <i class="icon-trash"></i>
+          </button>
+          </div>
+        </div>
+
+        <div class="event-status" *ngIf="isUpcoming(event)">
+          <span class="status-badge upcoming">Yaklaşan</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="no-events" *ngIf="filteredEvents.length === 0">
+      <div class="no-events-content">
+        <i class="icon-calendar-empty"></i>
+        <h3>Etkinlik Bulunamadı</h3>
+        <p>Seçilen kriterlere uygun etkinlik bulunmuyor.</p>
+        <a routerLink="/add" class="add-first-event-btn">
+          İlk Etkinliğinizi Ekleyin
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
